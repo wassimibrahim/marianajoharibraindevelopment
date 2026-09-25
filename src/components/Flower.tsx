@@ -14,15 +14,19 @@ export const PALETTES: Record<FlowerKind, FlowerPalette[]> = {
   blossom: [
     { petal: "#fbd3df", deep: "#ef8fb0", center: "#c9406f" },
     { petal: "#fde4ec", deep: "#f4a9c2", center: "#d9467a" },
+    { petal: "#d6e8fb", deep: "#7fb0e6", center: "#e9b43c" },
+    { petal: "#ffe0d2", deep: "#f79b7e", center: "#d2553d" },
   ],
   daisy: [
     { petal: "#ffffff", deep: "#efe7f7", center: "#f0b93c" },
     { petal: "#fff8e6", deep: "#f5dfa8", center: "#e59b25" },
+    { petal: "#ffe27a", deep: "#f6c945", center: "#9a5a1c" },
   ],
   rose: [
     { petal: "#ee6a8f", deep: "#b82652", center: "#8e1a3f" },
     { petal: "#f7a3b8", deep: "#d85c80", center: "#b33a60" },
     { petal: "#f6c89a", deep: "#e0925a", center: "#b8663a" },
+    { petal: "#ffe7a3", deep: "#eab94a", center: "#b8862a" },
   ],
   hibiscus: [
     { petal: "#ff8a7a", deep: "#e0435c", center: "#8f1d3a" },
@@ -32,6 +36,7 @@ export const PALETTES: Record<FlowerKind, FlowerPalette[]> = {
     { petal: "#f59ab3", deep: "#d9467a", center: "#6fa26f" },
     { petal: "#ffd36e", deep: "#f0a53a", center: "#6fa26f" },
     { petal: "#c7b2f2", deep: "#8a67d1", center: "#6fa26f" },
+    { petal: "#ffb39c", deep: "#ec6f55", center: "#6fa26f" },
   ],
   lavender: [
     { petal: "#b9a1ec", deep: "#7c5cc4", center: "#7fa77f" },
@@ -139,21 +144,27 @@ function Daisy({ p, center }: { p: FlowerPalette; center: string }) {
 }
 
 function Rose({ fill, p }: { fill: string; p: FlowerPalette }) {
+  const outer = "M50 50 C 31 47, 22 28, 35 16 C 43 9, 57 9, 65 16 C 78 28, 69 47, 50 50 Z";
   return (
     <g>
       {ROT5.map((r) => (
-        <ellipse key={r} cx="50" cy="28" rx="19" ry="17" fill={fill} stroke={p.deep} strokeOpacity="0.35" strokeWidth="0.8" transform={`rotate(${r + 18} 50 50)`} />
+        <path key={r} d={outer} fill={fill} stroke={p.deep} strokeOpacity="0.35" strokeWidth="0.7" transform={`rotate(${r} 50 50)`} />
       ))}
-      <circle cx="50" cy="50" r="21" fill={p.petal} stroke={p.deep} strokeOpacity="0.4" strokeWidth="0.8" />
-      <path
-        d="M50 50 m -3 0 a 3 3 0 1 1 6 0 a 6 6 0 1 1 -12 0 a 9.5 9.5 0 1 1 19 0 a 13 13 0 1 1 -26 1"
-        fill="none"
-        stroke={p.deep}
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        opacity="0.85"
-      />
-      <circle cx="50" cy="50" r="3" fill={p.center} />
+      {ROT5.map((r) => (
+        <path
+          key={`m${r}`}
+          d={outer}
+          fill={p.petal}
+          stroke={p.deep}
+          strokeOpacity="0.45"
+          strokeWidth="0.9"
+          transform={`rotate(${r + 36} 50 50) translate(50 50) scale(0.66) translate(-50 -50)`}
+        />
+      ))}
+      <circle cx="50" cy="50" r="13" fill={p.deep} opacity="0.9" />
+      <path d="M44 52 C 42 44, 52 40, 56 46 C 59 51, 54 57, 48 56" fill="none" stroke={p.petal} strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M47 50 C 47 47, 52 46, 53 49" fill="none" stroke={p.petal} strokeWidth="1.8" strokeLinecap="round" opacity="0.9" />
+      <path d="M38 50 C 38 38, 58 34, 62 48" fill="none" stroke={p.center} strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
     </g>
   );
 }

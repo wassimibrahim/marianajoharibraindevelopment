@@ -37,8 +37,14 @@ export function FlowerField() {
     let id = 0;
     const mobile = window.matchMedia("(max-width: 640px)").matches;
     const max = mobile ? 3 : 5;
+    let spawned = 0;
+    // A gentle welcome, not a screensaver: a handful of blooms, then stillness.
     const spawn = () => {
       if (document.hidden) return;
+      if (++spawned > (mobile ? 8 : 12)) {
+        window.clearInterval(interval);
+        return;
+      }
       const kind = FLOWER_KINDS[Math.floor(Math.random() * FLOWER_KINDS.length)];
       const edges = ["left", "right", "bottom"] as const;
       const bloom: EdgeBloom = {
@@ -74,6 +80,7 @@ export function FlowerField() {
                 animationDelay: `${d.delay}s`,
                 "--drift-duration": `${d.duration}s`,
                 "--drift-x": `${d.dx}px`,
+                animationIterationCount: 2,
               } as React.CSSProperties
             }
           >

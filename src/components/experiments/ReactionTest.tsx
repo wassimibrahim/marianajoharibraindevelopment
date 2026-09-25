@@ -71,7 +71,7 @@ export function ReactionTest({ spec, onDone }: { spec: Spec; onDone: (e: Evaluat
       <ProgressDots total={spec.delays.length} index={round} />
       <button
         type="button"
-        onPointerDown={tap}
+        onPointerDown={() => tap()} onClick={(e) => { if (e.detail === 0) tap(); }}
         className={`relative flex h-64 w-full touch-manipulation items-center justify-center overflow-hidden rounded-3xl transition-colors duration-150 ${phase === "bloom" ? "bg-petal" : phase === "early" ? "bg-rose/10" : "bg-white/80"}`}
       >
         {phase === "wait" && (

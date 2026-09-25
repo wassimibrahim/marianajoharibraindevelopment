@@ -1,3 +1,5 @@
+import { BIRTHDAY_TIMEZONE } from "@/config";
+
 /**
  * All the calendar logic for the laboratory.
  *
@@ -9,9 +11,39 @@
  * starts at that instant and keeps ticking in real time.
  */
 
-export const BIRTH_DATE = new Date(2002, 8, 25, 0, 0, 0);
-export const BIRTHDAY_24 = new Date(2026, 8, 25, 0, 0, 0);
-export const BIRTHDAY_25 = new Date(2027, 8, 25, 0, 0, 0);
+export const BIRTH_YEAR = 2002;
+
+/** Offset (ms) of `tz` from UTC at the given instant. */
+function tzOffsetMs(at: Date, tz: string): number {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: tz,
+      hourCycle: "h23",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    })
+      .formatToParts(at)
+      .map((p) => [p.type, p.value]),
+  );
+  const asUtc = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute, +parts.second);
+  return asUtc - Math.floor(at.getTime() / 1000) * 1000;
+}
+
+/** The instant at which the wall clock in `tz` reads the given date and hour. */
+export function zonedInstant(year: number, monthIndex: number, day: number, hour: number, tz: string): Date {
+  const guess = Date.UTC(year, monthIndex, day, hour);
+  let t = guess - tzOffsetMs(new Date(guess), tz);
+  const corrected = guess - tzOffsetMs(new Date(t), tz);
+  if (corrected !== t) t = corrected;
+  return new Date(t);
+}
+
+export const BIRTHDAY_24 = zonedInstant(2026, 8, 25, 0, BIRTHDAY_TIMEZONE);
+export const BIRTHDAY_25 = zonedInstant(2027, 8, 25, 0, BIRTHDAY_TIMEZONE);
 
 let offsetMs: number | null = null;
 
@@ -61,39 +93,25 @@ export function countdownTo(target: Date, from: Date = now()): CountdownParts {
   };
 }
 
-/**
- * The (entirely made-up) prefrontal cortex development percentage.
- * Starts at 96% on the 24th birthday and approaches — but never reaches —
- * 100% on the 25th. Certification requires behavioural evidence, not a date.
- */
-export function frontalLobeProgress(d: Date = now()): number {
+/** Fraction (0–1) of the year between the 24th and 25th birthdays that has elapsed. Real time, not brains. */
+export function yearElapsed(d: Date = now()): number {
   const span = BIRTHDAY_25.getTime() - BIRTHDAY_24.getTime();
-  const frac = Math.min(1, Math.max(0, (d.getTime() - BIRTHDAY_24.getTime()) / span));
-  const eased = 1 - Math.pow(1 - frac, 1.4);
-  return Math.min(99.99, 96 + eased * 3.99);
+  return Math.min(1, Math.max(0, (d.getTime() - BIRTHDAY_24.getTime()) / span));
 }
 
+/** Age in the birthday time zone. */
 export function ageOn(d: Date = now()): number {
-  let age = d.getFullYear() - BIRTH_DATE.getFullYear();
-  const hadBirthday =
-    d.getMonth() > BIRTH_DATE.getMonth() ||
-    (d.getMonth() === BIRTH_DATE.getMonth() && d.getDate() >= BIRTH_DATE.getDate());
-  if (!hadBirthday) age -= 1;
-  return age;
+  const year = +new Intl.DateTimeFormat("en-US", { timeZone: BIRTHDAY_TIMEZONE, year: "numeric" }).format(d);
+  const thisYearsBirthday = zonedInstant(year, 8, 25, 0, BIRTHDAY_TIMEZONE);
+  return year - BIRTH_YEAR - (d < thisYearsBirthday ? 1 : 0);
 }
 
 export function daysAlive(d: Date = now()): number {
-  const start = Date.UTC(BIRTH_DATE.getFullYear(), BIRTH_DATE.getMonth(), BIRTH_DATE.getDate());
-  const end = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
-  return Math.round((end - start) / 86400000) + 1;
+  return Math.floor((d.getTime() - zonedInstant(BIRTH_YEAR, 8, 25, 0, BIRTHDAY_TIMEZONE).getTime()) / 86400000) + 1;
 }
 
 export function daysUntilMaturity(d: Date = now()): number {
   return Math.max(0, Math.floor((BIRTHDAY_25.getTime() - d.getTime()) / 86400000));
-}
-
-export function isBirthday(d: Date = now()): boolean {
-  return d.getMonth() === 8 && d.getDate() === 25;
 }
 
 export function formatShortDate(iso: string): string {

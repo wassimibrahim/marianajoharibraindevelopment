@@ -74,7 +74,7 @@ export function ImpulseTest({ spec, onDone }: { spec: Spec; onDone: (e: Evaluati
         </svg>
         <motion.button
           type="button"
-          onPointerDown={press}
+          onPointerDown={() => press()} onClick={(e) => { if (e.detail === 0) press(); }}
           disabled={phase === "survived"}
           className="relative h-[200px] w-[200px] rounded-full text-center text-[13px] font-semibold tracking-[0.12em] text-white shadow-lift"
           style={{

@@ -14,6 +14,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "impulse",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "Score rises with every second you hold out; 10 full seconds scores 100.",
     instructions: "A very beautiful button will appear. Do not press it for 10 seconds.",
     generate: () => ({
       type: "impulse",
@@ -40,15 +42,18 @@ export const interactiveChallenges: ChallengeDef[] = [
   },
   {
     id: "stroop",
-    title: "Stroop Interference",
+    title: "Flower Stroop (core task)",
     kind: "executive",
     category: "inhibition",
     weight: 1,
     interactive: true,
-    instructions: "Tap the colour of the INK — not the word you read.",
+    scored: true,
+    scoring: "Accuracy counts most; speed adds a little, with extra allowance for touchscreens.",
+    core: true,
+    instructions: "The same short task every session, so results can be compared fairly over time. Tap the colour of the INK — not the word you read.",
     generate: (rng) => {
       const trials: StroopTrial[] = [];
-      const count = rng.int(8, 10);
+      const count = 10;
       for (let i = 0; i < count; i++) {
         const word = rng.pick(STROOP_COLORS);
         // ~80% incongruent: that is where the interference lives.
@@ -83,6 +88,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "memory",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "Points for each emoji in the right slot, plus partial credit for the right order.",
     instructions: "Memorise the sequence. It will disappear. Then rebuild it in order.",
     generate: (rng) => {
       const length = rng.int(5, 7);
@@ -119,6 +126,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "memory",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "Full marks for the exact reversed sequence; partial credit per correct digit.",
     instructions: "Digits will flash one at a time. Type them back in REVERSE order.",
     generate: (rng) => {
       const length = rng.int(4, 6);
@@ -150,6 +159,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "attention",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "Median of three reaction times, with a touchscreen allowance; false starts cost a little.",
     instructions: "Wait for the bud to bloom, then tap as fast as you can. Tapping early counts as a false start.",
     generate: (rng) => ({
       type: "reaction",
@@ -178,6 +189,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "inhibition",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "Mostly about not tapping cacti; hitting blossoms and speed count for less.",
     instructions: "Tap for every 🌸. Do NOT tap for 🌵. Speed matters, restraint matters more.",
     generate: (rng) => {
       const n = 14;
@@ -223,6 +236,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "flexibility",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "The first mistake after the hidden rule change is free — you need it to notice. Extra mistakes cost points.",
     instructions: "Sort each card by the rule shown. Watch the feedback carefully.",
     generate: (rng) => {
       const firstRule = rng.pick(["color", "shape"] as const);
@@ -271,6 +286,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "flexibility",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "Accuracy counts most; speed and the slowdown when the rule switches count a little.",
     instructions: "PINK card: is the number odd or even? BLUE card: is it lower or higher than 5?",
     generate: (rng) => {
       const trials: SwitchTrial[] = [];
@@ -308,6 +325,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "attention",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "Median search time across three gardens, minus a little for wrong taps.",
     instructions: "One item in each garden is different. Find it and tap it.",
     generate: (rng) => {
       const pairs: [string, string][] = [
@@ -351,6 +370,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "delay",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "Waiting the full time earns the bigger reward and 100; taking early scores by how long you waited.",
     instructions: "A live delayed-gratification experiment. Take the reward now, or wait for more.",
     generate: (rng) => {
       const waitSec = rng.int(12, 20);
@@ -386,6 +407,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "planning",
     weight: 1,
     interactive: true,
+    scored: true,
+    scoring: "Each stated constraint you respect earns points — there is no single perfect order.",
     instructions: "Tap the errands in the order you'd do them.",
     generate: (rng) => {
       const scenario = rng.pick(ERRAND_SCENARIOS);
@@ -418,6 +441,8 @@ export const interactiveChallenges: ChallengeDef[] = [
     category: "decision",
     weight: 1,
     interactive: true,
+    scored: false,
+    scoring: "Reflection: we show the true answer and whether the random first number pulled your guess. Trivia knowledge is not scored.",
     instructions: "A quick estimation. First, a comparison. Then, your best guess.",
     generate: (rng) => {
       const fact = rng.pick(ESTIMATION_FACTS);

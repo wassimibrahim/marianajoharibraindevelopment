@@ -31,7 +31,7 @@ function Grower({ g, progress }: { g: (typeof GROWERS)[number]; progress: Motion
   return (
     <motion.div
       className="pointer-events-none absolute z-10"
-      style={{ top: g.top, [g.side]: -g.size * 0.42, scale, rotate, originX: g.side === "left" ? 0 : 1, originY: 0.5 }}
+      style={{ top: g.top, [g.side]: -g.size * 0.95, scale, rotate, originX: g.side === "left" ? 0 : 1, originY: 0.5 }}
       aria-hidden
     >
       <Flower kind={g.kind} size={g.size} palette={PALETTES[g.kind][g.p]} />
@@ -63,9 +63,12 @@ export function BirthdayLetter() {
 
   return (
     <div ref={ref} className="relative mx-auto max-w-2xl">
-      {GROWERS.map((g, i) => (
-        <Grower key={i} g={g} progress={scrollYProgress} />
-      ))}
+      {/* Growing flowers sit in the margins, so they only appear where there is room for them. */}
+      <div className="hidden md:block">
+        {GROWERS.map((g, i) => (
+          <Grower key={i} g={g} progress={scrollYProgress} />
+        ))}
+      </div>
 
       <motion.article
         className="relative overflow-hidden rounded-[32px] border border-white bg-[#fffdf9] px-6 py-10 shadow-lift sm:px-12 sm:py-14"
@@ -110,12 +113,20 @@ export function BirthdayLetter() {
             ))}
           </ul>
           <motion.p {...fade}>And may this be the year we finally determine whether the frontal lobe is actually online.</motion.p>
+          <motion.div {...fade} className="flex items-center justify-center gap-3 py-2" aria-hidden>
+            <Flower kind="blossom" size={26} palette={PALETTES.blossom[0]} />
+            <Flower kind="daisy" size={26} palette={PALETTES.daisy[2]} />
+            <Flower kind="blossom" size={26} palette={PALETTES.blossom[2]} />
+          </motion.div>
+          <motion.p {...fade}>
+            Whatever the laboratory concludes, I hope this year is kind to you. More freedom, more adventures, more reasons to laugh, and
+            people who appreciate you properly.
+          </motion.p>
+          <motion.p {...fade}>Stay funny. Stay basita. Have the happiest birthday.</motion.p>
         </div>
 
         <motion.div {...fade} className="mt-10 flex items-end justify-between gap-4">
-          <p className="display text-[clamp(1.5rem,6vw,2rem)] text-ink italic">
-            Happy 24th, Mari <span className="not-italic">🌸</span>
-          </p>
+          <p className="display text-[clamp(1.6rem,6.5vw,2.1rem)] text-ink italic">— Wassim ❤️</p>
           <motion.div
             className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full font-display text-2xl font-semibold text-white shadow-lift"
             style={{ background: "radial-gradient(circle at 35% 30%, #f28aa9, #c02d62 65%, #8b1c47)" }}
@@ -123,7 +134,7 @@ export function BirthdayLetter() {
             whileInView={{ scale: 1, rotate: -8 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 160, damping: 10, delay: 0.3 }}
-            aria-label="Wax seal"
+            aria-hidden
           >
             M
           </motion.div>

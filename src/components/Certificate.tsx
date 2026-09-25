@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Download, Share2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { formatLongDate } from "@/lib/dates";
-import { bandFor } from "@/lib/scoring";
 import { Flower } from "./Flower";
 
 export function Certificate({ score, date }: { score: number; date: Date }) {
@@ -59,9 +58,9 @@ export function Certificate({ score, date }: { score: number; date: Date }) {
 
           <p className="mx-auto mt-6 max-w-md text-[14px] leading-relaxed text-ink/80">
             This certifies that the specimen, having reached the chronological age of twenty-five and completed the Final Frontal-Lobe
-            Examination with a score of <strong className="text-ink">{score}%</strong> (<em>{bandFor(score).label.toLowerCase()}</em>), is hereby
-            declared <strong className="text-ink">allegedly an adult</strong> — pending further behavioural evidence, a valid employment
-            contract, and a passport that works in both directions.
+            Examination with a game score of <strong className="text-ink">{score}/100</strong>, is hereby
+            declared <strong className="text-ink">allegedly an adult</strong>, pending further behavioural evidence. The laboratory notes
+            that a game score cannot certify anything, and has chosen to celebrate anyway.
           </p>
 
           <div className="mx-auto mt-8 flex max-w-md items-end justify-between gap-6">
@@ -75,7 +74,7 @@ export function Certificate({ score, date }: { score: number; date: Date }) {
               <p className="border-t border-ink/30 pt-1 font-mono text-[9px] tracking-widest text-ink-soft">DATE OF CERTIFICATION</p>
             </div>
           </div>
-          <p className="mx-auto mt-6 max-w-[16rem] font-mono text-[9px] text-ink-faint">Sample size: 1 · Conflicts of interest: significant · Love for subject: very high ❤️</p>
+          <p className="mx-auto mt-6 max-w-[16rem] font-mono text-[9px] text-ink-faint">Sample size: 1 · Love for subject: very high ❤️</p>
         </div>
       </div>
       <div className="mt-4 flex flex-wrap justify-center gap-3">

@@ -69,7 +69,7 @@ export function SearchTest({ spec, onDone }: { spec: Spec; onDone: (e: Evaluatio
           <motion.button
             key={idx}
             type="button"
-            onPointerDown={() => tapCell(idx)}
+            onPointerDown={() => tapCell(idx)} onClick={(e) => { if (e.detail === 0) tapCell(idx); }}
             animate={wrong === idx ? { x: [0, -5, 5, -3, 0] } : found && idx === r.index ? { scale: [1, 1.4, 1.2] } : {}}
             className={`flex aspect-square min-h-[44px] items-center justify-center rounded-xl text-[clamp(1.4rem,6vw,1.9rem)] ${found && idx === r.index ? "bg-champagne" : ""}`}
           >

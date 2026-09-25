@@ -107,7 +107,7 @@ export function TaskSwitchTest({ spec, onDone }: { spec: Spec; onDone: (e: Evalu
           <button
             key={label}
             type="button"
-            onPointerDown={() => answer(idx as 0 | 1)}
+            onPointerDown={() => answer(idx as 0 | 1)} onClick={(e) => { if (e.detail === 0) answer(idx as 0 | 1); }}
             className="min-h-[64px] rounded-2xl border border-ink/10 bg-white font-mono text-[13px] tracking-wider text-ink shadow-sm active:scale-95"
           >
             {label}

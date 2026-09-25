@@ -19,7 +19,8 @@ export function Toasts({ enabled }: { enabled: boolean }) {
     const schedule = (delay: number) => {
       timer = window.setTimeout(() => {
         if (shown.current >= 4) return;
-        if (!document.hidden) {
+        // Never interrupt a game in progress.
+        if (!document.hidden && !document.querySelector("[data-lab-busy]")) {
           const n = order[shown.current % order.length];
           notify({ icon: n.icon, title: n.title, body: n.body.replace("{days}", daysAlive(now()).toLocaleString("en-GB")), tone: "news" });
           shown.current++;
@@ -27,7 +28,7 @@ export function Toasts({ enabled }: { enabled: boolean }) {
         schedule(50_000 + Math.random() * 50_000);
       }, delay);
     };
-    schedule(22_000);
+    schedule(35_000);
     return () => window.clearTimeout(timer);
   }, [enabled, notify]);
 

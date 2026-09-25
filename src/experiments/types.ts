@@ -43,6 +43,18 @@ export const CATEGORY_ORDER: CategoryKey[] = [
   "emotion",
 ];
 
+/** Categories that come from tasks with a defensible correct answer. */
+export const SCORED_CATEGORIES: CategoryKey[] = [
+  "impulse",
+  "delay",
+  "inhibition",
+  "memory",
+  "attention",
+  "flexibility",
+  "planning",
+  "reasoning",
+];
+
 export interface Evaluation {
   /** 0–100, or null when the answer is a matter of taste rather than skill. */
   score: number | null;
@@ -184,9 +196,18 @@ export interface ChallengeDef {
   title: string;
   kind: Kind;
   category: CategoryKey;
-  /** Contribution to the overall score. Mariana research questions are light. */
+  /** Kept for backwards compatibility with saved results; scoring is unweighted. */
   weight: number;
   interactive: boolean;
+  /**
+   * true: objective task with a defensible correct answer, counts towards the game score.
+   * false: reflection question (preferences, emotions, personal choices) — never scored.
+   */
+  scored: boolean;
+  /** The short comparable task that runs every session. */
+  core?: boolean;
+  /** One plain sentence explaining how this task is scored (or why it isn't). */
+  scoring: string;
   instructions?: string;
   generate: (rng: Rng) => ChallengeSpec;
 }
@@ -202,6 +223,7 @@ export interface ChallengeResult {
   kind: Kind;
   category: CategoryKey;
   weight: number;
+  scored: boolean;
   score: number | null;
   verdict: string;
   detail?: string;

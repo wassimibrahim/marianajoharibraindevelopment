@@ -1,19 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Award, Clock, FlaskConical, Heart, LineChart } from "lucide-react";
+import { Cake, Clock, FlaskConical, Flower2, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const ITEMS = [
-  { id: "letter", label: "Card", Icon: Heart },
-  { id: "countdown", label: "Countdown", Icon: Clock },
-  { id: "experiment", label: "Test", Icon: FlaskConical },
-  { id: "curve", label: "Curve", Icon: LineChart },
-  { id: "achievements", label: "Awards", Icon: Award },
+  { id: "letter", label: "Letter", Icon: Heart },
+  { id: "wish", label: "Wish", Icon: Cake },
+  { id: "countdown", label: "25", Icon: Clock },
+  { id: "experiment", label: "Lab", Icon: FlaskConical },
+  { id: "garden", label: "Garden", Icon: Flower2 },
 ];
 
 export function BottomNav() {
-  const [active, setActive] = useState("letter");
+  const [active, setActive] = useState("");
   useEffect(() => {
     const obs = new IntersectionObserver(
       (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),

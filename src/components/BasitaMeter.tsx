@@ -78,7 +78,7 @@ export function BasitaMeter() {
               key="max"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: [1, 1.04, 1], opacity: 1 }}
-              transition={{ scale: { repeat: Infinity, duration: 0.9 } }}
+              transition={{ scale: { repeat: 3, duration: 0.9 } }}
               className="rounded-2xl bg-rose px-4 py-2.5 font-mono text-[12px] font-medium tracking-wide text-white"
             >
               ⚠️ WARNING: Critical levels of basita detected.

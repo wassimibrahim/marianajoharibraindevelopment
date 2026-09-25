@@ -41,7 +41,7 @@ export function LabProvider({ children }: { children: ReactNode }) {
 
   const notify = useCallback((t: Omit<Toast, "id">) => {
     const id = ++toastId.current;
-    setToasts((list) => [...list.slice(-2), { ...t, id }]);
+    setToasts((list) => [...list.slice(-1), { ...t, id }]);
     window.setTimeout(() => setToasts((list) => list.filter((x) => x.id !== id)), 6500);
   }, []);
 

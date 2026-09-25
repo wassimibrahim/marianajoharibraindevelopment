@@ -3,7 +3,7 @@ import { choiceChallenges } from "./choices";
 import { interactiveChallenges } from "./interactive";
 import { marianaChallenges } from "./mariana";
 import {
-  CATEGORY_ORDER,
+  SCORED_CATEGORIES,
   type CategoryKey,
   type ChallengeDef,
   type ChallengeInstance,
@@ -41,73 +41,87 @@ function draw(pool: ChallengeDef[], count: number, rng: Rng, h: SelectionHistory
   return picked;
 }
 
+export type SessionLength = "short" | "full";
+
+const instantiate = (seed: string, defs: ChallengeDef[]): ChallengeInstance[] =>
+  defs.map((def) => ({ def, spec: def.generate(createRng(hashString(`${seed}:${def.id}`))) }));
+
+export const CORE_ID = "stroop";
+
 /**
  * Deterministic, date-aware session selection: the same day + session number
  * always yields the same experiment (refreshing does not reroll the questions),
  * while consecutive sessions are steered away from repeating themselves.
+ *
+ * Every session opens with the same short core task (comparable over time),
+ * followed by rotating scored challenges and one unscored reflection question.
+ * Short ≈ 3 minutes; full is the extended version.
  */
-export function selectSession(day: string, sessionNumber: number, history: SelectionHistory): ChallengeInstance[] {
+export function selectSession(
+  day: string,
+  sessionNumber: number,
+  history: SelectionHistory,
+  length: SessionLength = "short",
+): ChallengeInstance[] {
   const seed = `${day}#${sessionNumber}`;
   const rng = createRng(seed);
-  const size = rng.pick([5, 6, 6, 7, 7, 8]);
-  const marianaCount = size >= 7 && rng.chance(0.5) ? 2 : 1;
-  const executiveCount = size - marianaCount;
-  const interactiveCount = Math.min(executiveCount - 1, Math.ceil(executiveCount / 2) + (rng.chance(0.4) ? 1 : 0));
+  const core = BANK.find((d) => d.id === CORE_ID)!;
+  const interactive = BANK.filter((d) => d.scored && d.interactive && !d.core);
+  const choice = BANK.filter((d) => d.scored && !d.interactive);
+  const reflections = BANK.filter((d) => !d.scored);
+  const counts = length === "short" ? { interactive: 2, choice: 1, reflection: 1 } : { interactive: 3, choice: 2, reflection: 2 };
 
-  const interactive = BANK.filter((d) => d.kind === "executive" && d.interactive);
-  const choice = BANK.filter((d) => d.kind === "executive" && !d.interactive);
-  const mariana = BANK.filter((d) => d.kind === "mariana");
-
-  let defs: ChallengeDef[] = [];
+  let rotating: ChallengeDef[] = [];
   for (let attempt = 0; attempt < 6; attempt++) {
-    const a = draw(interactive, interactiveCount, rng, history, []);
-    const b = draw(choice, executiveCount - interactiveCount, rng, history, a);
-    const c = draw(mariana, marianaCount, rng, history, []);
-    defs = [...a, ...b, ...c];
-    const key = defs.map((d) => d.id).sort().join("|");
+    const a = draw(interactive, counts.interactive, rng, history, [core]);
+    const b = draw(choice, counts.choice, rng, history, [core, ...a]);
+    const c = draw(reflections, counts.reflection, rng, history, []);
+    rotating = [...a, ...b, ...c];
+    const key = [CORE_ID, ...rotating.map((d) => d.id)].sort().join("|");
     if (key !== [...history.lastCombo].sort().join("|")) break;
   }
 
-  // Interleave so the session alternates between tapping and thinking,
-  // and never opens with a joke question.
-  const ordered = rng.shuffle(defs);
-  const firstSerious = ordered.findIndex((d) => d.kind === "executive");
-  if (firstSerious > 0) ordered.unshift(...ordered.splice(firstSerious, 1));
-
-  return ordered.map((def) => ({ def, spec: def.generate(createRng(hashString(`${seed}:${def.id}`))) }));
+  // Core first; keep the reflection away from the very end so the session finishes on a game.
+  const ordered = rng.shuffle(rotating);
+  const lastScored = [...ordered].reverse().find((d) => d.scored);
+  if (lastScored && !ordered[ordered.length - 1].scored) {
+    ordered.splice(ordered.indexOf(lastScored), 1);
+    ordered.push(lastScored);
+  }
+  return instantiate(seed, [core, ...ordered]);
 }
 
-/** The longer final examination: one task from every executive category. */
+/** The longer final examination: the core task, one scored game per category, and one reflection. */
 export function selectFinalExam(day: string): ChallengeInstance[] {
   const seed = `final#${day}`;
   const rng = createRng(seed);
+  const core = BANK.find((d) => d.id === CORE_ID)!;
   const defs: ChallengeDef[] = [];
-  for (const cat of CATEGORY_ORDER) {
-    const options = BANK.filter((d) => d.kind === "executive" && d.category === cat);
+  for (const cat of SCORED_CATEGORIES) {
+    const options = BANK.filter((d) => d.scored && !d.core && d.category === cat);
     if (options.length) defs.push(rng.pick(options));
   }
-  const bonus = BANK.filter((d) => d.kind === "executive" && d.interactive && !defs.includes(d));
-  defs.push(rng.pick(bonus));
   defs.push(BANK.find((d) => d.id === "passport-immigration")!);
-  return rng.shuffle(defs).map((def) => ({ def, spec: def.generate(createRng(hashString(`${seed}:${def.id}`))) }));
+  return instantiate(seed, [core, ...rng.shuffle(defs)]);
 }
 
 export interface SessionScores {
+  /** Average of the scored games this session. Not a measure of anything neurological. */
   overall: number;
+  /** Core task score, the only number that is comparable between sessions. */
+  core?: number;
   categories: Partial<Record<CategoryKey, number>>;
 }
 
 export function scoreSession(results: ChallengeResult[]): SessionScores {
-  const scored = results.filter((r) => r.score !== null);
-  const totalWeight = scored.reduce((s, r) => s + r.weight, 0);
-  const overall = totalWeight
-    ? Math.round(scored.reduce((s, r) => s + (r.score as number) * r.weight, 0) / totalWeight)
-    : 0;
+  const scored = results.filter((r) => r.scored && r.score !== null);
+  const overall = scored.length ? Math.round(scored.reduce((s, r) => s + (r.score as number), 0) / scored.length) : 0;
+  const core = results.find((r) => r.id === CORE_ID)?.score ?? undefined;
 
   const categories: Partial<Record<CategoryKey, number>> = {};
-  for (const cat of CATEGORY_ORDER) {
-    const inCat = scored.filter((r) => r.category === cat && r.kind === "executive");
+  for (const cat of SCORED_CATEGORIES) {
+    const inCat = scored.filter((r) => r.category === cat);
     if (inCat.length) categories[cat] = Math.round(inCat.reduce((s, r) => s + (r.score as number), 0) / inCat.length);
   }
-  return { overall, categories };
+  return { overall, core: core === null ? undefined : core, categories };
 }

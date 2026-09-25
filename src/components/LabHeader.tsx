@@ -27,12 +27,12 @@ export function LabHeader() {
   ];
 
   return (
-    <header className="relative px-5 pt-14 pb-8 sm:pt-20">
+    <div className="relative px-1 pb-4">
       <div className="mx-auto max-w-5xl">
         <div className="grid items-center gap-10 lg:grid-cols-[1.25fr_1fr]">
           <div>
             <motion.p className="eyebrow" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-              Johari Cognitive Research Institute · Est. 2026
+              <span className="text-rose">IV</span> · Johari Cognitive Research Institute · Est. 2026
             </motion.p>
             <motion.h2
               className="display mt-4 text-[clamp(2.2rem,8.5vw,4.4rem)] leading-[0.98] font-medium text-ink"
@@ -77,12 +77,12 @@ export function LabHeader() {
           </motion.div>
         </div>
 
-        <p className="mx-auto mt-10 max-w-2xl text-center text-[11px] leading-relaxed text-ink-faint">
-          <span className="font-mono">Disclaimer:</span> The popular idea that your frontal lobe magically finishes developing on your 25th
-          birthday is a simplification. This website has elected to ignore that nuance for comedic purposes.
+        <p className="mx-auto mt-10 max-w-xl text-center text-[12.5px] leading-relaxed text-ink-soft">
+          Real birthday. Playful experiments. Extremely questionable laboratory. These games cannot tell whether your brain is ‘fully
+          developed.’
         </p>
       </div>
-    </header>
+    </div>
   );
 }
 
@@ -90,12 +90,12 @@ function SpecimenWreath() {
   const n = 12;
   return (
     <div className="relative z-10 mx-auto h-[120px] w-[120px]">
-      <motion.div className="absolute inset-0" animate={{ rotate: 360 }} transition={{ duration: 80, repeat: Infinity, ease: "linear" }}>
+      <motion.div className="absolute inset-0" initial={{ rotate: -40, opacity: 0 }} whileInView={{ rotate: 0, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1.4, ease: "easeOut" }}>
         {Array.from({ length: n }, (_, i) => {
           const a = (i / n) * Math.PI * 2;
           const kind = FLOWER_KINDS[i % 4 === 0 ? 2 : i % 3 === 0 ? 1 : i % 2 ? 0 : 3];
           return (
-            <div key={i} className="absolute" style={{ left: 60 + Math.cos(a) * 48 - 15, top: 60 + Math.sin(a) * 48 - 15 }}>
+            <div key={i} className="absolute" style={{ left: Math.round(60 + Math.cos(a) * 48 - 15), top: Math.round(60 + Math.sin(a) * 48 - 15) }}>
               <Flower kind={kind} size={30} palette={PALETTES[kind][i % PALETTES[kind].length]} />
             </div>
           );

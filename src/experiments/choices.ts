@@ -23,6 +23,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "delay",
     weight: 1,
     interactive: false,
+    scored: false,
+    scoring: "Reflection: both choices can be sensible. We show the implied yearly return so you can judge your own reasoning.",
     generate: (rng) => {
       const nowAmt = rng.pick([500, 800, 1000, 1200, 2000]);
       const months = rng.pick([6, 12, 12, 18, 24]);
@@ -77,6 +79,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "decision",
     weight: 1,
     interactive: false,
+    scored: false,
+    scoring: "Reflection: we explain the sunk-cost idea, but whether you go out is your call.",
     generate: () => ({
       type: "choice",
       prompt:
@@ -105,6 +109,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "decision",
     weight: 1,
     interactive: false,
+    scored: false,
+    scoring: "Reflection: we explain the sunk-cost idea, but what you do with your evening is your call.",
     generate: (rng) => {
       const variant = rng.int(0, 2);
       if (variant === 0) {
@@ -179,6 +185,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "planning",
     weight: 1,
     interactive: false,
+    scored: true,
+    scoring: "Scored on whether you make the bag drop with a safe buffer; any comfortable buffer gets full marks.",
     generate: (rng) => {
       const flightMin = rng.pick([6 * 60 + 30, 7 * 60, 7 * 60 + 15, 8 * 60]);
       const travel = rng.pick([25, 35, 45]);
@@ -204,11 +212,10 @@ export const choiceChallenges: ChallengeDef[] = [
           const leave = Number(choice);
           const buffer = dropClose - (leave + travel);
           const detail = `Arrival at bag drop with ${buffer} min to spare (wake-up at ${fmt(leave - getReady)}).`;
-          if (buffer < 0) return { score: 5, verdict: "Bag drop closed before you arrived. Enjoy the city you were trying to leave.", detail };
-          if (buffer < 12) return { score: 45, verdict: "Technically possible. Spiritually a panic attack.", detail };
-          if (buffer <= 40) return { score: 100, verdict: "A sensible buffer for traffic, queues and forgotten chargers.", detail };
-          if (buffer <= 60) return { score: 82, verdict: "Cautious. You will see the airport Pret at its most intimate hours.", detail };
-          return { score: 64, verdict: "Over-planned. You traded an hour of sleep for airport carpet.", detail };
+          if (buffer < 0) return { score: 0, verdict: "Bag drop closed before you arrived. Enjoy the city you were trying to leave.", detail };
+          if (buffer < 12) return { score: 50, verdict: "Technically possible. Spiritually a panic attack.", detail };
+          if (buffer <= 60) return { score: 100, verdict: "A sensible buffer for traffic, queues and forgotten chargers.", detail };
+          return { score: 90, verdict: "Very safe. You traded some sleep for airport carpet, which is allowed.", detail };
         },
       };
     },
@@ -220,6 +227,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "risk",
     weight: 1,
     interactive: false,
+    scored: false,
+    scoring: "Reflection: risk appetite is a preference. We show the expected values, not a grade.",
     generate: (rng) => gainGamble(rng),
   },
   {
@@ -229,6 +238,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "risk",
     weight: 1,
     interactive: false,
+    scored: false,
+    scoring: "Reflection: risk appetite is a preference. We show the expected value, not a grade.",
     generate: (rng) => {
       const loss = rng.pick([20, 30, 50]);
       const ratio = rng.pick([0.8, 1.2, 1.6, 2.2, 3]);
@@ -262,6 +273,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "risk",
     weight: 1,
     interactive: false,
+    scored: true,
+    scoring: "Correct: ‘still 50/50’, or suspecting a biased coin. ‘Tails is due’ is the gambler’s fallacy.",
     generate: (rng) => {
       const n = rng.int(5, 9);
       const side = rng.pick(["heads", "tails"]);
@@ -294,6 +307,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "decision",
     weight: 1,
     interactive: false,
+    scored: true,
+    scoring: "Correct: trusting the large sample, or reading the reviews first.",
     generate: (rng) => {
       const few = rng.int(6, 14);
       const many = rng.pick([1800, 2400, 3100]);
@@ -327,6 +342,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "reasoning",
     weight: 1,
     interactive: false,
+    scored: true,
+    scoring: "Correct: the single statement. Two things together can never be more likely than one of them.",
     generate: (rng) => {
       const trait = rng.pick([
         "sends seven-minute voice notes",
@@ -362,6 +379,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "reasoning",
     weight: 1,
     interactive: false,
+    scored: true,
+    scoring: "One correct answer.",
     generate: (rng) => {
       const { seq, answer } = makeSequence(rng);
       const distractors = new Set<number>();
@@ -389,6 +408,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "reasoning",
     weight: 1,
     interactive: false,
+    scored: true,
+    scoring: "One correct answer, judged only from the premises.",
     generate: (rng) => {
       const [a, b, c] = rng.shuffle(["consulates", "bureaucrats", "flower shops", "cats", "managers", "lemons", "tote bags", "voice notes"]).slice(0, 3);
       const form = rng.int(0, 3);
@@ -428,6 +449,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "emotion",
     weight: 1,
     interactive: false,
+    scored: false,
+    scoring: "Reflection: there’s no right way to feel. The comments are just the lab being nosy.",
     generate: () => ({
       type: "choice",
       prompt: "Someone replies ‘k’ after you sent them three paragraphs. Your first move?",
@@ -457,6 +480,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "emotion",
     weight: 1,
     interactive: false,
+    scored: false,
+    scoring: "Reflection: there’s no right way to feel. The comments are just the lab being nosy.",
     generate: () => ({
       type: "choice",
       prompt: "Friday, 18:04. Your boss messages: “Can we talk on Monday?” No other context.",
@@ -484,6 +509,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "emotion",
     weight: 1,
     interactive: false,
+    scored: false,
+    scoring: "Reflection: there’s no right way to feel. The comments are just the lab being nosy.",
     generate: (rng) => {
       const mins = rng.pick([25, 40, 55]);
       return {
@@ -514,6 +541,8 @@ export const choiceChallenges: ChallengeDef[] = [
     category: "emotion",
     weight: 1,
     interactive: false,
+    scored: false,
+    scoring: "Reflection: there’s no right way to feel. The comments are just the lab being nosy.",
     generate: () => ({
       type: "choice",
       prompt: "The consulate cancels your appointment — which took three months to get — by email, the night before.",

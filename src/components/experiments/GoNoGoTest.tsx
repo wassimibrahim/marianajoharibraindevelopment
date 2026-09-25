@@ -88,7 +88,7 @@ export function GoNoGoTest({ spec, onDone }: { spec: Spec; onDone: (e: Evaluatio
       <ProgressDots total={spec.stimuli.length} index={Math.max(0, idx)} />
       <button
         type="button"
-        onPointerDown={tap}
+        onPointerDown={() => tap()} onClick={(e) => { if (e.detail === 0) tap(); }}
         className={`relative flex h-64 w-full touch-manipulation items-center justify-center rounded-3xl transition-colors duration-150 ${flash === "hit" ? "bg-sage/20" : flash === "bad" ? "bg-rose/15" : "bg-white/80"}`}
         aria-label="Tap area"
       >

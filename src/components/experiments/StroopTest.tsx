@@ -103,7 +103,7 @@ export function StroopTest({ spec, onDone }: { spec: Spec; onDone: (e: Evaluatio
           <button
             key={c}
             type="button"
-            onPointerDown={() => answer(c)}
+            onPointerDown={() => answer(c)} onClick={(e) => { if (e.detail === 0) answer(c); }}
             className={`flex min-h-[56px] items-center justify-center gap-2 rounded-2xl border border-ink/10 bg-white text-[15px] font-medium text-ink shadow-sm active:scale-95 ${idx === 4 ? "col-span-2 sm:col-span-1" : ""}`}
           >
             <span className="h-4 w-4 rounded-full" style={{ background: INK[c] }} />

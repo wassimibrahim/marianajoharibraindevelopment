@@ -44,3 +44,4 @@ export const sleep = (ms: number) => new Promise((r) => window.setTimeout(r, ms)
 
 /** Timestamp for reaction-time measurement (only ever called from event handlers). */
 export const clock = () => performance.now();
+

@@ -1,20 +1,33 @@
 /** All the copy for the laboratory's jokes, in one place. */
 
-export const WASSIM_HYPOTHESES = [
-  "Researchers have proposed one final marker of complete frontal-lobe development: deciding she wants to marry Wassim.",
-  "Alternative hypothesis: maturity will be confirmed when Mariana finally wants to fuck Wassim. Peer review remains pending.",
-  "Marriage-to-Wassim Variable: statistically insignificant so far.",
-  "Wassim Hypothesis™: controversial, poorly funded, but principal investigator remains optimistic.",
+/**
+ * Confidential research notes: jokes about the principal investigator's
+ * obvious bias. Shown only when opened. Never affect scores, achievements or access.
+ */
+export const CONFIDENTIAL_NOTES = [
+  "Wassim Hypothesis: complete maturity will be confirmed when Mariana decides to marry him.",
+  "Independent review has identified a significant conflict of interest.",
+  "Alternative hypothesis: she wants to fuck Wassim. Submitted by Wassim. Peer review unsurprisingly unsuccessful.",
+];
+export const CONFIDENTIAL_FOOTNOTE = "Her actual preferences remain outside this laboratory’s jurisdiction.";
+
+export const BOUQUET_WISHES = [
+  "An employer who discovers employment contracts.",
+  "A Venezuelan passport that supports round trips.",
+  "More money. Less nonsense.",
+  "A year as funny and lovely as you.",
+  "A frontal lobe that can withstand your own decisions.",
 ];
 
+/** Employment jokes target the employer; passport jokes target bureaucracy. */
 export const EMPLOYMENT_NEWS = [
   { icon: "📰", title: "BREAKING", body: "Mariana's employer reportedly considering inventing the employment contract." },
-  { icon: "📄", title: "Contract status: unavailable", body: "Day {days} of Mariana being alive." },
+  { icon: "📄", title: "Day {days} of Mariana being alive", body: "Her employer’s contract remains a theoretical concept." },
   { icon: "🔬", title: "Scientific breakthrough", body: "Scientists confirm employment contracts exist in several countries." },
   { icon: "☎️", title: "No comment", body: "HR department could not be reached for comment." },
-  { icon: "⚖️", title: "Legal update", body: "Labour law has been spotted in the vicinity of Mariana's workplace. It did not go in." },
+  { icon: "⚖️", title: "Legal update", body: "Labour law has been spotted near Mariana's workplace. It did not go in." },
   { icon: "🏛️", title: "Consular bulletin", body: "Venezuelan bureaucracy is still thinking. Please do not refresh." },
-  { icon: "🌸", title: "Field observation", body: "Specimen remains basita. No intervention required." },
+  { icon: "🛂", title: "Bureaucracy update", body: "A form has requested a second form. The second form is out of stock." },
 ];
 
 export const PASSPORT_ANSWERS = [
@@ -26,24 +39,15 @@ export const PASSPORT_ANSWERS = [
   "No prediction available. Pray.",
   "The stamp exists. Its location is unknown.",
   "Entering: plausible. Leaving: a philosophical question.",
-  "A cousin of a cousin knows someone. Probability increased by 2%.",
+  "The system is down. The system has always been down.",
   "Signal lost somewhere over the Atlantic.",
   "Consulate says yes. Other consulate says no. Both are correct.",
   "Photocopy everything. Then photocopy the photocopies.",
 ];
 
 export const LAB_NOTES = [
-  { date: "25 Sep 2026", text: "Subject turned 24 today. Claims frontal lobe is 'basically done'. Claim logged. Evidence requested." },
-  { date: "25 Sep 2026", text: "Subject observed laughing at own joke before finishing it. Classified as a feature, not a bug." },
-  { date: "Ongoing", text: "Subject's employer continues to operate in a legal grey area researchers describe as 'vibes-based'." },
-  { date: "Ongoing", text: "Passport status oscillates between 'soon' and 'inshallah' with a period of roughly one bureaucratic cycle." },
+  { date: "25 Sep 2026", text: "Subject turned 24 today. Claims frontal lobe is ‘basically done’. Claim logged. Evidence requested." },
+  { date: "Ongoing", text: "Her employer continues to operate in a legal grey area researchers describe as ‘vibes-based’." },
+  { date: "Ongoing", text: "Venezuelan bureaucracy oscillates between ‘soon’ and ‘inshallah’ with a period of roughly one geological era." },
   { date: "Recurring", text: "Subject remains basita. Attempts to measure basita more precisely have broken two instruments." },
-];
-
-export const LOBE_STATUSES = [
-  "Warming up",
-  "Buffering",
-  "Online (allegedly)",
-  "Running on coffee",
-  "Operational-ish",
 ];

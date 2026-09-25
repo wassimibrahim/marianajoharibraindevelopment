@@ -9,7 +9,7 @@ export function launchFireworks(intensity = 1): void {
   window.dispatchEvent(new CustomEvent("lab:fireworks", { detail: { intensity } }));
 }
 
-export async function confettiBurst(style: "petals" | "classic" | "hearts" = "classic"): Promise<void> {
+export async function confettiBurst(style: "petals" | "classic" | "hearts" | "stars" = "classic", origin = { x: 0.5, y: 0.55 }): Promise<void> {
   if (typeof window === "undefined" || prefersReducedMotion()) return;
   const confetti = (await import("canvas-confetti")).default;
   const colors = ["#f7b3c8", "#d9467a", "#c9b8f0", "#8c6bd1", "#bfddf5", "#4f8fcb", "#e8c77a", "#ffffff"];
@@ -19,7 +19,7 @@ export async function confettiBurst(style: "petals" | "classic" | "hearts" = "cl
     confetti({ ...base, particleCount: 70, origin: { x: 0.85, y: 0.75 }, angle: 120 });
     return;
   }
-  const glyphs = style === "hearts" ? ["❤️", "💗", "✨"] : ["🌸", "🌷", "🌼", "🪻", "🌺"];
+  const glyphs = style === "hearts" ? ["❤️", "💗", "✨"] : style === "stars" ? ["✨", "⭐", "🌟"] : ["🌸", "🌷", "🌼", "🪻", "🌺"];
   const shapes = glyphs.map((text) => confetti.shapeFromText({ text, scalar: 2.2 }));
   confetti({
     shapes,
@@ -29,7 +29,7 @@ export async function confettiBurst(style: "petals" | "classic" | "hearts" = "cl
     startVelocity: 32,
     ticks: 260,
     gravity: 0.7,
-    origin: { x: 0.5, y: 0.55 },
+    origin,
     flat: true,
     disableForReducedMotion: true,
   });

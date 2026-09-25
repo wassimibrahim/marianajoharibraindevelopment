@@ -20,6 +20,8 @@ function research(
     category: "emotion",
     weight: W,
     interactive: false,
+    scored: false,
+    scoring: "Mariana research question: purely for fun, never scored.",
     generate: (rng) => {
       const shuffled = rng.shuffle(options);
       return {
@@ -89,7 +91,7 @@ export const marianaChallenges: ChallengeDef[] = [
       { id: "oats", label: "Overnight oats, prepared yesterday", emoji: "🥣", score: 95, verdict: "Planning ahead for breakfast. Terrifying." },
       { id: "labneh", label: "Labneh, za'atar, olive oil, bread", emoji: "🫒", score: 100, verdict: "Correct. Culturally and nutritionally unimpeachable." },
       { id: "arepa", label: "An arepa", emoji: "🫓", score: 100, verdict: "Also correct. The Venezuelan delegation approves." },
-      { id: "coffee", label: "Coffee. Only coffee. Forever.", emoji: "☕", score: 40, verdict: "A liquid diet of anxiety. Very 24." },
+      { id: "coffee", label: "Coffee. Only coffee. Forever.", emoji: "☕", score: 40, verdict: "Bold. Researchers are in no position to judge." },
     ],
   ),
   research(

@@ -44,8 +44,3 @@ export const RESULT_BANDS: Band[] = [
 export function bandFor(score: number): Band {
   return RESULT_BANDS.find((b) => score >= b.min) ?? RESULT_BANDS[RESULT_BANDS.length - 1];
 }
-
-/** A deliberately unimpressive confidence figure: 17 experiments ≈ 14%. */
-export function scientificConfidence(experiments: number): number {
-  return Math.round(100 * (1 - Math.exp(-experiments / 110)));
-}
